@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactoryMethod", "FactoryMethod.csproj", "{C045A85E-D266-49E1-AC19-0F73979A3072}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyFactoryMethod", "AssemblyFactoryMethod.csproj", "{C045A85E-D266-49E1-AC19-0F73979A3072}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyFactoryMethodTests", "..\FactoryMethodTests\AssemblyFactoryMethodTests.csproj", "{FD1D6B18-0271-45F1-AF25-53FA91C7DA84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C045A85E-D266-49E1-AC19-0F73979A3072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C045A85E-D266-49E1-AC19-0F73979A3072}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C045A85E-D266-49E1-AC19-0F73979A3072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD1D6B18-0271-45F1-AF25-53FA91C7DA84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD1D6B18-0271-45F1-AF25-53FA91C7DA84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD1D6B18-0271-45F1-AF25-53FA91C7DA84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD1D6B18-0271-45F1-AF25-53FA91C7DA84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
