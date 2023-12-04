@@ -27,7 +27,7 @@ namespace FactoryMethodTests.UseCases
         {
             //Arrange
             //Act
-            AbilityBase ability = _abilityFactory.CreateInstance<FireAbility>();
+            AbilityBase ability = _abilityFactory.CreateInstance(AbilityEnum.Fire);
             //Assert
             Assert.IsTrue(ability.Name == "Fire");
         }
@@ -51,7 +51,7 @@ namespace FactoryMethodTests.UseCases
         {
             //Arrange
             //Act
-            IOperation operation = _operationFactory.CreateInstance<Add>();
+            IOperation operation = _operationFactory.CreateInstance(Operations.Add);
             var result = operation.Calc(5,5);
             //Assert
             Assert.IsTrue(result == 10);
@@ -66,7 +66,7 @@ namespace FactoryMethodTests.UseCases
         {
             //Arrange
             //Act
-            NumberProcessorBase numberProcessor = _numberProcessorFactory.CreateInstance<IsEvenStrategy>(10);
+            NumberProcessorBase numberProcessor = _numberProcessorFactory.CreateInstance(NumberProcessors.Even,10);
             //Assert
             Assert.IsTrue(numberProcessor.Check());
         }

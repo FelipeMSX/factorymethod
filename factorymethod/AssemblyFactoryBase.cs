@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using AssemblyFactoryMethod;
+using OmegaCore.Exceptions;
+using System.Reflection;
 
 namespace FactoryMethod
 {
@@ -7,7 +9,9 @@ namespace FactoryMethod
     /// <para>Each implemation of <see cref="AssemblyFactoryBase{TType}"/> uses its own set of cached types.</para>
     /// <author>Felipe Morais: felipeprodev@gmail.com</author>
     /// </summary>
-    public abstract class AssemblyFactoryBase<TType>: IAssemblyFactoryMethod<TType> where TType : class
+    public abstract class AssemblyFactoryBase<TType, TEnum>: IAssemblyFactoryMethod<TType, TEnum> 
+        where TType : class
+        where TEnum : Enum
     {
         public int Count => _cachedTypes.Count;
 
@@ -24,37 +28,51 @@ namespace FactoryMethod
         private static void Initialize()
         {
             Type typeOfT = typeof(TType);
+
             var registredTypes = Assembly.GetAssembly(typeOfT)!.GetTypes().Where(t => CheckInstanceType(typeOfT, t));
 
             foreach (Type type in registredTypes)
             {
-                _cachedTypes.Add(type.Name, type);
+                AssemblyFactoryAttribute? assemblyFactoryAttribute = type.GetCustomAttribute<AssemblyFactoryAttribute>();
+                
+                //How can I log this?
+                if (assemblyFactoryAttribute == null)
+                    throw new AttributeIsMissingException();
+
+                if(_cachedTypes.ContainsKey(assemblyFactoryAttribute.Name))
+                    throw new DuplicatedKeyException();
+
+                _cachedTypes.Add(assemblyFactoryAttribute.Name, type);
             }
         }
 
         /// <summary>
-        /// <inheritdoc cref="IAssemblyFactoryMethod{TType}.CreateInstance{TRequestType}()"/>
+        /// <inheritdoc cref="IAssemblyFactoryMethod{TType, TEnum}.CreateInstance(TEnum)"/>
         /// </summary>
-        /// <typeparam name="TRequestType"><inheritdoc cref="IAssemblyFactoryMethod{TType}.CreateInstance{TRequestType}()"/>.</typeparam>
-        /// <returns><inheritdoc cref="IAssemblyFactoryMethod{TType}.CreateInstance{TRequestType}()"/></returns>
-        public TType CreateInstance<TRequestType>() where TRequestType : TType, new()
+        /// <returns><inheritdoc cref="IAssemblyFactoryMethod{TType, TEnum}.CreateInstance(TEnum)"/></returns>
+        public TType CreateInstance(TEnum value)
         {
-            string className = typeof(TRequestType).Name;
+            string keyType = value.ToString();
 
-            TType newInstance = CreateInstanceInternal(_cachedTypes[className]);
+            if (!_cachedTypes.ContainsKey(keyType))
+                throw new TypeNotRegisteredException();
+            
+
+            TType newInstance = CreateInstanceInternal(_cachedTypes[keyType]);
+
             return newInstance;
         }
 
-        /// <summary>
-        /// <inheritdoc cref="IAssemblyFactoryMethod{TType}.CreateInstance{TRequestType}()"/>
-        /// </summary>
-        /// <typeparam name="TRequestType"><inheritdoc cref="IAssemblyFactoryMethod{TType}.CreateInstance{TRequestType}()"/>.</typeparam>
-        /// <returns><inheritdoc cref="IAssemblyFactoryMethod{TType}.CreateInstance{TRequestType}()"/></returns>
-        public TType CreateInstance<TRequestType>(params object[] args) where TRequestType : TType
-        {
-            string className = typeof(TRequestType).Name;
 
-            TType newInstance = CreateInstanceInternal(_cachedTypes[className], args);
+        public TType CreateInstance(TEnum value, params object[] args)
+        {
+            string keyType = value.ToString();
+
+            if (!_cachedTypes.ContainsKey(keyType))
+                throw new TypeNotRegisteredException();
+
+            TType newInstance = CreateInstanceInternal(_cachedTypes[keyType], args);
+
             return newInstance;
         }
 
